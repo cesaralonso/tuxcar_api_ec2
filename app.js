@@ -8,8 +8,7 @@ var CronJob = require('cron').CronJob;
 var sockjs  = require('sockjs');
 var http    = require('http');
 var compression = require('compression');
-
-const corsConfig = require('./config/cors');
+// const corsConfig = require('./config/cors');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -95,8 +94,8 @@ var pool =    mysql.createPool({
 app.use(compression())
 
 // app.use(cors());
-app.use(corsConfig);
-// app.use(cors({credentials: true, origin: 'http://localhost:4002'}));
+// app.use(corsConfig);
+app.use(cors({credentials: true, origin: 'http://34.220.153.206:8080'}));
 
 app.use(morgan('dev'));
 
