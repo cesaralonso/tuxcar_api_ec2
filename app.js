@@ -95,7 +95,7 @@ app.use(compression())
 
 // app.use(cors());
 // app.use(corsConfig);
-app.use(cors({credentials: true, origin: '34.220.153.206:8080'}));
+app.use(cors({credentials: false, origin: '34.220.153.206:8080'}));
 
 app.use(morgan('dev'));
 
