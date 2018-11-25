@@ -95,7 +95,17 @@ app.use(compression())
 
 // app.use(cors());
 // app.use(corsConfig);
-app.use(cors({credentials: false, origin: '34.220.153.206:8080'}));
+// app.use(cors({credentials: false, origin: '34.220.153.206:8080'}));
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", 'http://34.220.153.206:8080'); 
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header("Access-Control-Allow-Headers",'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,Authorization');
+  next();
+});
+
+
 
 app.use(morgan('dev'));
 
