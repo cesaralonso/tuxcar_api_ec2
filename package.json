@@ -1,0 +1,33 @@
+{
+  "name": "vieliquidaciones3001_5",
+  "version": "1.0.1",
+  "description": "VieLiquidaciones API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Software Insights",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "bcrypt": "3.0.2",
+    "body-parser": "^1.17.2",
+    "compression": "^1.7.2",
+    "cors": "^2.8.4",
+    "cron": "^1.3.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^8.0.1",
+    "lodash": "^4.17.10",
+    "moment": "^2.18.1",
+    "multer": "^1.3.0",
+    "mysql": "^2.14.1",
+    "object.values": "^1.0.4",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0",
+    "sockjs": "^0.3.19"
+  },
+  "devDependencies": {
+    "morgan": "^1.8.2"
+  }
+}
