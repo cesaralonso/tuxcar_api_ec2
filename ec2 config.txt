@@ -3,6 +3,10 @@ tuxcars123
 
 
 
+https://medium.com/@thianlopezz/configuraci%C3%B3n-de-ambiente-de-producci%C3%B3n-para-una-aplicaci%C3%B3n-en-node-js-9f867b464ad9
+
+
+
 se crea usuarios para uso remoto con privilegios a base de datos:
 
 NUEVO USUARIO CON PRIVILEGIOS PARA TABAL tuxcars

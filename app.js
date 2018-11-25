@@ -8,7 +8,8 @@ var CronJob = require('cron').CronJob;
 var sockjs  = require('sockjs');
 var http    = require('http');
 var compression = require('compression');
-// const corsConfig = require('./config/cors');
+
+const corsConfig = require('./config/cors');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -94,8 +95,8 @@ var pool =    mysql.createPool({
 app.use(compression())
 
 // app.use(cors());
-// app.use(corsConfig);
-app.use(cors({credentials: true, origin: 'http://localhost:4002'}));
+app.use(corsConfig);
+// app.use(cors({credentials: true, origin: 'http://localhost:4002'}));
 
 app.use(morgan('dev'));
 
@@ -173,82 +174,6 @@ app.use('/si_reporte', si_reporte);
 app.use('/permisotaxiasignado', permisotaxiasignado);
 app.use('/dashboard', dashboard);
 app.use('/permisotaxiestado', permisotaxiestado);
-
-
-// CRON JOB, CREA LIQUIDACIONES DIARIAS PARA TODOS LOS PERMISOSTAXIASIGNADOS CON ESTADO ASIGNADO
-// new CronJob('10 * * * * * *', function() {
-new CronJob('00 00 00 * * 0-7', function() {
-   
-    let now = '';
-    let weekday = '';
-    let permisotaxiasignados = [];
-
-    // SACAR QUE NÚMERO DÍA ES HOY Y LA FECHA
-    query = 'SELECT WEEKDAY(NOW()) as weekday, CURDATE() as now';
-    keys = [];
-
-    connection.query(query, keys, (error, fecha) => {
-        if(error) 
-            console.log("ERROR Un error ha ocurrido mientras se leía el día de la semana y la fecha");
-        else {
-            now = fecha[0].now;
-            weekday = fecha[0].weekday;
-
-            // OBTENER TODOS PERMISOS ASIGNADOS CON ESTATUS ASIGNADO DE ACUERDO AL NÚMERO DE DÍA ACTUAL
-            if (weekday === 6) {
-                query = 'SELECT pta.chofer_idchofer as idchofer, pta.idpermisotaxiasignado, pta.hora as h_corte, pt.liquidezDom as liquidacion, pta.baja FROM permisotaxiasignado AS pta INNER JOIN permisotaxi as pt ON pt.idpermisotaxi = pta.permisotaxi_idpermisotaxi WHERE pta.estado_idestado = 12 HAVING pta.baja IS NULL OR pta.baja = false';
-                keys = [];
-            } else {
-                query = 'SELECT pta.chofer_idchofer as idchofer, pta.idpermisotaxiasignado, pta.hora as h_corte, pt.liquidez as liquidacion, pta.baja FROM permisotaxiasignado AS pta INNER JOIN permisotaxi as pt ON pt.idpermisotaxi = pta.permisotaxi_idpermisotaxi WHERE pta.estado_idestado = 12 HAVING pta.baja IS NULL OR pta.baja = false';
-                keys = [];
-            }
-
-            connection.query(query, keys, (error, permisotaxiasignados) => {
-                if(error) 
-                    console.log("ERROR Un error ha ocurrido mientras se leía el permisoasignado");
-                else {
-
-                    // POR CADA PERMISOTAXIASIGNADO
-                    permisotaxiasignados.forEach(element => {
-
-                        const Liquidacion = {
-                            fecha: now,
-                            saldoanterior: element.liquidacion,
-                            saldoactual: element.liquidacion,
-                            montopagado: 0,
-                            bonificado: 0,
-                            h_corte: element.h_corte,
-                            permisotaxiasignado_idpermisotaxiasignado: element.idpermisotaxiasignado,
-                            chofer_idchofer: element.idchofer,
-                            estado_idestado: 9 // ADEUDANDO
-                        }
-
-                        query = 'INSERT INTO liquidacion SET ?';
-                        keys = [Liquidacion];
-
-                        connection.query(query, keys, (error, result) => {
-                            if(error) {
-                                console.log("ERROR al crear liquidación: ", error);
-                            }
-                            else {
-                                // UPDATE A CHOFER DEUDA LIQUIDACIÓN
-                                query = 'UPDATE chofer SET deudaliquidacion = deudaliquidacion + ? WHERE idchofer = ?';
-                                keys = [element.liquidacion, element.idchofer];
-                                connection.query(query, keys, (error, result) => {
-                                    if(error) 
-                                        console.log("ERROR al crear liquidación desde Cron: ", error);
-                                    else {
-                                        console.log("Se ha creado el registro de liquidación desde Cron: ", result);
-                                    }
-                                });
-                            }
-                        });
-                    });
-                }
-            });
-        }
-    });
-}, null, true, 'America/Mexico_City');
 
 
 // WEBSOCKET
