@@ -25,7 +25,8 @@
     "object.values": "^1.0.4",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
-    "sockjs": "^0.3.19"
+    "sockjs": "^0.3.19",
+    "web-push": "^3.2.5"
   },
   "devDependencies": {
     "morgan": "^1.8.2"
