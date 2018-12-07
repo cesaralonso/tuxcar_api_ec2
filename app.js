@@ -10,6 +10,20 @@ var http    = require('http');
 var compression = require('compression');
 // const corsConfig = require('./config/cors');
 
+// WebPush
+const webpush = require('web-push');
+const vapidKeys = {
+    "publicKey": "BKDqvtj7FSHmb9yNWrj6MkTMK1KCPCD2N2iSPZfUCF6vB0lM_ms1hPK4EmrVIAblrJtaa02fHN0d2H501C8cF3k",
+    "privateKey": "cgT7MIO70HEz0ex5FBK0ezP6AVUIB6rycu9rBVcEDJY"
+}
+webpush.setVapidDetails(
+    'mailto:cesar_alonso_m_g@hotmail.com',
+    vapidKeys.publicKey,
+    vapidKeys.privateKey
+);
+
+
+
 const dotenv = require('dotenv');
 dotenv.config();
 const mysql = require('mysql');
@@ -72,13 +86,15 @@ const si_reporte = require('./routes/si_reportes');
 const permisotaxiasignado = require('./routes/permisotaxiasignados');
 const dashboard = require('./routes/dashboard');
 const permisotaxiestado = require('./routes/permisotaxiestados');
+// Api WebPush
+const api = require('./routes/apis');
 
 // Express Instance
 const app = express();
 
 
 // NUEVO
-var pool =    mysql.createPool({
+var pool = mysql.createPool({
     connectionLimit : 100,
     waitForConnections : true,
     queueLimit : 0,  
@@ -86,45 +102,29 @@ var pool =    mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    debug    :  false,
+    debug:  false,
     waitTimeOut : 28800,
 });
 
+// Middlewares
 // gzip
 app.use(compression())
-
-// app.use(cors());
-// app.use(corsConfig);
 app.use(cors({credentials: true, origin: 'http://34.220.153.206:8080'}));
-
-/*app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", 'http://34.220.153.206:8080'); 
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header("Access-Control-Allow-Headers",'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,Authorization');
-  next();
-});*/
-
-
-
+app.use(cors({credentials: true, origin: 'https://tuxcar-pwa.firebaseapp.com'}));
 app.use(morgan('dev'));
-
-// NUEVO
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(bodyParser.json());
-
 // POOL CONECTION
 app.use(function (req, res, next) {
     req.mysql = pool;
     next();
 });
-
 // Initialize passport
 app.use(passport.initialize());
 
 // Call passport Strategy
 require('./config/passport')(passport);
+
 
 // Warehouses
 app.use('/abono', abono);
@@ -183,6 +183,8 @@ app.use('/si_reporte', si_reporte);
 app.use('/permisotaxiasignado', permisotaxiasignado);
 app.use('/dashboard', dashboard);
 app.use('/permisotaxiestado', permisotaxiestado);
+// WebPush
+app.use('/api', api);
 
 
 // WEBSOCKET
@@ -194,7 +196,10 @@ function broadcast(message){
   }
 }
 
-var sockjs_opts = { sockjs_url: "./sockjs.min.js" };
+var sockjs_opts = { 
+    sockjs_url: "./sockjs.min.js", 
+    disable_cors: true 
+};
 
 var sockjs_echo = sockjs.createServer(sockjs_opts);
 sockjs_echo.on('connection', function(conn) {
@@ -213,7 +218,7 @@ sockjs_echo.on('connection', function(conn) {
 
 var server = http.createServer(app);
 
-sockjs_echo.installHandlers(server, {prefix:'/echo'});
+sockjs_echo.installHandlers(server, { prefix:'/echo' });
 
 server.listen(3000, () => {
     console.log(' [*] Listening on 0.0.0.0:3000');
