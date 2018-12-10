@@ -18,7 +18,7 @@ Api.notifications = (pushSubscriber, connection, next) => {
 
     connection.query(query, keys, (error, result) => {
         if(error) 
-            return next({ success: false, error: error, message: 'Un error ha ocurrido mientras se creaba el registro de subscripción' });
+            return next({ success: false, error: error, message: 'Un error ha ocurrido mientras se creaba el registro de subscripción, suscriptor: ' + JSON.stringify(pushSubscriber) });
         else
             return next(null, { success: true, result: result, message: 'Subcriptor creado' });
     });
