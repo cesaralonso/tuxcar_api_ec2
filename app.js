@@ -13,8 +13,8 @@ var compression = require('compression');
 // WebPush
 const webpush = require('web-push');
 const vapidKeys = {
-    "publicKey": "BKDqvtj7FSHmb9yNWrj6MkTMK1KCPCD2N2iSPZfUCF6vB0lM_ms1hPK4EmrVIAblrJtaa02fHN0d2H501C8cF3k",
-    "privateKey": "cgT7MIO70HEz0ex5FBK0ezP6AVUIB6rycu9rBVcEDJY"
+    "publicKey":"BMVpZgkqBIepfHqQGSZntOXUzI7rNrOA39UjCcS_XbE344G57KfL4p-czl3upwqu5vzQ4s0NBAMK7083GX1igjY",
+    "privateKey":"_3bcAF5mhUjGRqyoVyDe-hkfMQhDG1UDpRZ1cOVpXAM"
 }
 webpush.setVapidDetails(
     'mailto:cesar_alonso_m_g@hotmail.com',
