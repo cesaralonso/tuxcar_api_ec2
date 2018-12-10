@@ -13,8 +13,8 @@ Api.notifications = (pushSubscriber, connection, next) => {
 
     console.log('pushSubscriber', JSON.stringify(pushSubscriber));
 
-    query = 'INSERT INTO suscriber SET ?';
-    keys = [pushSubscriber];
+    query = 'INSERT INTO suscriber SET suscription = ?';
+    keys = [JSON.stringify(pushSubscriber)];
 
     connection.query(query, keys, (error, result) => {
         if(error) 
@@ -60,7 +60,7 @@ Api.newsletter = (pushSubscriber, connection, next) => {
             console.log('suscribers result', JSON.stringify(result));
 
             Promise.all(result.map(sub => webpush.sendNotification(
-                sub, JSON.stringify(notificationPayload) )))
+                JSON.parse(sub.suscription), JSON.stringify(notificationPayload) )))
                 .then(() => {
                     return next(null, { success: true, result: result, message: 'Notificaciones enviadas correctamente' });
                 })
