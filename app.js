@@ -109,7 +109,7 @@ var pool = mysql.createPool({
 // Middlewares
 // gzip
 app.use(compression())
-app.use(cors({credentials: true, origin: 'http://34.220.153.206:8080'}));
+app.use(cors({credentials: true, origin: 'http://35.167.255.93:8080'}));
 app.use(cors({credentials: true, origin: 'https://tuxcar-pwa.firebaseapp.com'}));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
