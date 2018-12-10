@@ -24,7 +24,7 @@ Api.notifications = (pushSubscriber, connection, next) => {
     });
 };
 
-Api.newsletter = (pushSubscriber, connection, next) => {
+Api.newsletter = (connection, next) => {
     if( !connection )
         return next('Connection refused');
 
