@@ -220,6 +220,6 @@ var server = http.createServer(app);
 
 sockjs_echo.installHandlers(server, { prefix:'/echo' });
 
-server.listen(443, () => {
+server.listen(3000, () => {
     console.log(' [*] Listening on 0.0.0.0:3000');
 });
