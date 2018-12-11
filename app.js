@@ -10,6 +10,14 @@ var http    = require('http');
 var compression = require('compression');
 // const corsConfig = require('./config/cors');
 
+
+
+var fs = require('fs');
+var https = require('https');
+
+
+
+
 // WebPush
 const webpush = require('web-push');
 const vapidKeys = {
@@ -88,6 +96,9 @@ const dashboard = require('./routes/dashboard');
 const permisotaxiestado = require('./routes/permisotaxiestados');
 // Api WebPush
 const api = require('./routes/apis');
+
+
+
 
 // Express Instance
 const app = express();
@@ -216,10 +227,14 @@ sockjs_echo.on('connection', function(conn) {
 
 });
 
-var server = http.createServer(app);
+var server = https.createServer({
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+}, app);
 
 sockjs_echo.installHandlers(server, { prefix:'/echo' });
 
 server.listen(3000, () => {
     console.log(' [*] Listening on 0.0.0.0:3000');
 });
+
