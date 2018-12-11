@@ -228,8 +228,8 @@ sockjs_echo.on('connection', function(conn) {
 });
 
 var server = https.createServer({
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.cert')
+  key: fs.readFileSync('./ssl/server.key'),
+  cert: fs.readFileSync('./ssl/server.crt')
 }, app);
 
 sockjs_echo.installHandlers(server, { prefix:'/echo' });
