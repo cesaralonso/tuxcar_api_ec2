@@ -134,7 +134,7 @@ app.use(function (req, res, next) {
 app.use(passport.initialize());
 
 // Call passport Strategy
-require('./config/passport')(passport);
+// ////require('./config/passport')(passport);
 
 
 // Warehouses
