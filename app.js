@@ -234,7 +234,7 @@ var server = https.createServer({
 
 sockjs_echo.installHandlers(server, { prefix:'/echo' });
 
-server.listen(3000, () => {
+server.listen(443, () => {
     console.log(' [*] Listening on 0.0.0.0:3000');
 });
 
